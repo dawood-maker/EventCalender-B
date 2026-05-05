@@ -5,8 +5,8 @@ const attendeeSchema = new mongoose.Schema({
   email: { type: String, required: true },
   status: {
     type: String,
-    enum: ["coming", "not_coming", "late"],
-    default: "coming",
+    enum: ["pending", "coming", "not_coming", "late"],
+    default: "pending",
   },
 });
 
@@ -14,8 +14,8 @@ const eventSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     location: { type: String, required: true },
-    startDate: { type: Date, required: true }, // ← startDate
-    endDate: { type: Date, required: true }, // ← endDate
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
     time: { type: String, required: true },
     returnTime: { type: String, default: "" },
     description: { type: String, default: "" },
@@ -24,12 +24,10 @@ const eventSchema = new mongoose.Schema(
       enum: ["event", "text", "birthday", "home", "outside"],
       default: "event",
     },
-    // ── Birthday ke liye extra fields ──────────────────────
     birthdayPerson: { type: String, default: "" },
     birthdayAge: { type: Number, default: null },
     birthdayGift: { type: String, default: "" },
     birthdayNote: { type: String, default: "" },
-    // ── Text/Note type ke liye ─────────────────────────────
     textNote: { type: String, default: "" },
     textColor: { type: String, default: "#10b981" },
     attendees: [attendeeSchema],
