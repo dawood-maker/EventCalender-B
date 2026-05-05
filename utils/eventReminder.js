@@ -1,5 +1,5 @@
-const cron      = require("node-cron");
-const Event     = require("../models/Event");
+const cron = require("node-cron");
+const Event = require("../models/Event");
 const sendEmail = require("./sendEmail");
 
 const startEventReminder = () => {
@@ -9,11 +9,13 @@ const startEventReminder = () => {
     try {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      const start = new Date(tomorrow); start.setHours(0,  0,  0, 0);
-      const end   = new Date(tomorrow); end.setHours(23, 59, 59, 999);
+      const start = new Date(tomorrow);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(tomorrow);
+      end.setHours(23, 59, 59, 999);
 
       const events = await Event.find({
-        date:   { $gte: start, $lte: end },
+        date: { $gte: start, $lte: end },
         status: "upcoming",
       }).populate("createdBy");
 
@@ -22,14 +24,14 @@ const startEventReminder = () => {
         if (!user?.email) continue;
 
         await sendEmail({
-          to:      user.email,
+          to: user.email,
           subject: `⏰ Kal ka event: "${event.title}"`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;
                         padding:20px;border:1px solid #e5e7eb;border-radius:12px;">
               <h2 style="color:#f59e0b;">⏰ Event Reminder</h2>
               <p>Hello <strong>${user.name || "there"}</strong>,</p>
-              <p>Kal tumhara ek event hai!</p>
+              <p>You have an event tomorrow!</p>
               <table style="width:100%;border-collapse:collapse;margin:16px 0;">
                 <tr style="background:#fef3c7;">
                   <td style="padding:10px;font-weight:bold;">📌 Event</td>
@@ -47,11 +49,15 @@ const startEventReminder = () => {
                   <td style="padding:10px;font-weight:bold;">⏰ Time</td>
                   <td style="padding:10px;">${event.time}</td>
                 </tr>
-                ${event.returnTime ? `
+                ${
+                  event.returnTime
+                    ? `
                 <tr style="background:#fef3c7;">
                   <td style="padding:10px;font-weight:bold;">🔄 Return</td>
                   <td style="padding:10px;">${event.returnTime}</td>
-                </tr>` : ""}
+                </tr>`
+                    : ""
+                }
                 <tr>
                   <td style="padding:10px;font-weight:bold;">👥 Attendees</td>
                   <td style="padding:10px;">${event.attendees.length} log</td>

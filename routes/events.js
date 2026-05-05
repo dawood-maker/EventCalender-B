@@ -254,7 +254,7 @@ router.get("/rsvp/:eventId/:attendeeId/:response", async (req, res) => {
           <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;
             border:1px solid #e5e7eb;border-radius:14px;">
             <h2 style="color:#4f46e5;">📬 RSVP Update</h2>
-            <p style="color:#6b7280;">Kisi ne aapke event invitation ka jawab diya.</p>
+            <p style="color:#6b7280;">Someone responded to your event invitation.</p>
             <div style="background:#f9fafb;border-radius:10px;padding:16px;margin:16px 0;">
               <p><strong>👤 Name:</strong> ${att.name}</p>
               <p><strong>📧 Email:</strong> ${att.email}</p>
@@ -279,8 +279,8 @@ router.get("/rsvp/:eventId/:attendeeId/:response", async (req, res) => {
     const emoji = response === "coming" ? "🎉" : "😢";
     const msgText =
       response === "coming"
-        ? "Thank you! Aapka jawab record ho gaya."
-        : "Aapka jawab record ho gaya. Aap ki kami mehsoos hogi!";
+        ? "Think you! Your answer has been recorded."
+        : "Your answer has been recorded. You will be missed!";
     const bgColor = response === "coming" ? "#f0fdf4" : "#fef2f2";
     const hColor = response === "coming" ? "#16a34a" : "#dc2626";
 
@@ -295,17 +295,17 @@ router.get("/rsvp/:eventId/:attendeeId/:response", async (req, res) => {
       .event-box{background:#f9fafb;border-radius:12px;padding:14px;margin:20px 0;text-align:left;}
       .event-box p{margin:4px 0;color:#374151;font-size:14px;}</style></head>
       <body><div class="card">
-        <h1>${emoji}</h1><h2>Response Record Ho Gaya!</h2><p>${msgText}</p>
+        <h1>${emoji}</h1><h2>Response recorded!</h2><p>${msgText}</p>
         <div class="event-box">
           <p><strong>📌 Event:</strong> ${event.title}</p>
           <p><strong>📅 Date:</strong> ${new Date(event.startDate || event.date).toDateString()}</p>
           <p><strong>⏰ Time:</strong> ${event.time}</p>
           <p><strong>📍 Location:</strong> ${event.location}</p>
         </div>
-        <p style="font-size:13px;color:#9ca3af;">Yeh window band kar sakte hain.</p>
+        <p style="font-size:13px;color:#9ca3af;">It can bend the window.</p>
       </div></body></html>`);
   } catch (err) {
-    res.status(500).send("<h2>❌ Kuch gadbad ho gayi.</h2>");
+    res.status(500).send("<h2>❌ Something will happen.</h2>");
   }
 });
 
@@ -340,9 +340,9 @@ router.post("/send-invites/:id", auth, async (req, res) => {
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;
               border:1px solid #e5e7eb;border-radius:14px;">
-              <h2 style="color:#4f46e5;">📅 Aap Ko Invite Kiya Gaya Hai!</h2>
+              <h2 style="color:#4f46e5;">📅You've been invited!</h2>
               <p>Hello <strong>${att.name}</strong>,</p>
-              <p><strong>${user.name || user.email}</strong> ne aap ko invite kiya hai:</p>
+              <p><strong>${user.name || user.email}</strong> has invited you:</p>
               <div style="background:#f9fafb;border-radius:12px;padding:16px;margin:16px 0;">
                 <h3 style="margin:0 0 12px;color:#1f2937;">${event.title}</h3>
                 <p>📍 ${event.location}</p>
@@ -358,10 +358,10 @@ router.post("/send-invites/:id", auth, async (req, res) => {
               <div style="display:flex;gap:12px;margin-bottom:24px;">
                 <a href="${yesLink}" style="flex:1;display:block;text-align:center;padding:14px 0;
                   background:#16a34a;color:white;font-size:16px;font-weight:700;border-radius:10px;
-                  text-decoration:none;">✅ Haan, Main Aa Raha/Rahi Hoon!</a>
+                  text-decoration:none;"> Yes, I'm coming!</a>
                 <a href="${noLink}" style="flex:1;display:block;text-align:center;padding:14px 0;
                   background:#dc2626;color:white;font-size:16px;font-weight:700;border-radius:10px;
-                  text-decoration:none;">❌ Nahi Aa Sakta/Sakti</a>
+                  text-decoration:none;"> Can't come</a>
               </div>
               <p style="color:#6b7280;font-size:13px;">
                 Organized by: <strong>${user.name || user.email}</strong>
@@ -372,7 +372,7 @@ router.post("/send-invites/:id", auth, async (req, res) => {
     );
 
     res.json({
-      message: `${event.attendees.length} attendees ko invites bhej diye`,
+      message: `${event.attendees.length} Send invitations to Atindis`,
     });
   } catch (err) {
     res.status(500).json({ message: "Email error", error: err.message });
@@ -386,7 +386,7 @@ router.delete("/:id", auth, async (req, res) => {
       _id: req.params.id,
       createdBy: req.userId,
     });
-    res.json({ message: "Event delete ho gaya" });
+    res.json({ message: "The event was deleted." });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
